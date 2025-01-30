@@ -29,18 +29,9 @@ def compute_saliency_maps(X, y, model):
     # TODO: Implement this function. Perform a forward and backward pass through #
     # the model to compute the gradient of the correct class score with respect  #
     # to each input image. You first want to compute the loss over the correct   #
-    # scores, and then compute the gradients with torch.autograd.grad.           #
+    # scores, and then compute the gradients with torch.autograd.gard.           #
     ##############################################################################
-
-    y_pred = model(X)
-    # sum the unnormalized scores to a scalar
-    unnorm_scores = y_pred.gather(1, y.view(-1, 1)).squeeze().sum()
-    gradients = torch.autograd.grad(unnorm_scores, X)[0]
-
-    # To compute the saliency map, we take the absolute value of this gradient, 
-    # then take the maximum value over the 3 input channels
-    saliency, _ = gradients.abs().max(dim=1)
-    
+    pass
     ##############################################################################
     #                             END OF YOUR CODE                               #
     ##############################################################################
@@ -78,33 +69,14 @@ def make_fooling_image(X, target_y, model):
     # in fewer than 100 iterations of gradient ascent.                           #
     # You can print your progress over iterations to check your algorithm.       #
     ##############################################################################
-
-    for i in range(100):
-        y_pred = model(X_fooling)
-        y_pred_idx = y_pred.argmax()
-        if y_pred_idx == target_y:
-            print(f'stopping early at training step {i}')
-            break
-            
-        # loss function is the score of our desired class
-        score = y_pred[0, target_y]
-        # could instead call score.backward() here, and then access the X_fooling.grad parameter
-        grad = torch.autograd.grad(score, X_fooling)[0]
-
-        dX = learning_rate * grad / grad.norm()
-
-        # now ADD the gradient to get closer to target_y!
-        with torch.no_grad():
-            X_fooling += dX
-            # X_fooling.grad.zero_()
-
+    pass
     ##############################################################################
     #                             END OF YOUR CODE                               #
     ##############################################################################
     return X_fooling.detach()
 
 
-def update_class_visualization(model, target_y, l2_reg, learning_rate, img):
+def update_class_visulization(model, target_y, l2_reg, learning_rate, img):
     """
     Perform one step of update on a image to maximize the score of target_y
     under a pretrained model.
@@ -126,22 +98,7 @@ def update_class_visualization(model, target_y, l2_reg, learning_rate, img):
     # L2 regularization term!                                              #
     # Be very careful about the signs of elements in your code.            #
     ########################################################################
-
-    # this is just like the make_fooling_image, but only one step...
-    y_pred = model(img)
-        
-    # loss function is the score of our desired class
-    score = y_pred[0, target_y] + l2_reg * img.norm()
-    score.backward()
-
-    grad = img.grad
-    dX = learning_rate * grad / grad.norm()
-
-    # now ADD the gradient to get closer to target_y!
-    with torch.no_grad():
-        img += dX
-        # X_fooling.grad.zero_()
-
+    pass
     ########################################################################
     #                             END OF YOUR CODE                         #
     ########################################################################
