@@ -10,7 +10,5 @@ extensions = [
 ]
 
 setup(
-    ext_modules=cythonize(extensions, 
-        language_level = "2" # Added by Anton for compatibility to Cython=0.29
-        ),
+    ext_modules=cythonize(extensions),
 )
